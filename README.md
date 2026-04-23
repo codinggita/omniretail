@@ -1,7 +1,8 @@
 # 📦 OmniRetail — The Future of Phygital Commerce
 
 <img width="1918" height="870" alt="image" src="https://github.com/user-attachments/assets/998e9a41-c322-4df3-844e-3fde33093baf" /> <br/> <br/>
-<img width="1918" height="870" alt="image" src="https://github.com/user-attachments/assets/b7b2d8ce-19f0-4976-a9ca-57f52e021d5a" />
+<img width="1917" height="870" alt="image" src="https://github.com/user-attachments/assets/a688f009-c9b4-4e4c-8c3c-49761eb39b12" />
+
 
 
 [![MERN Stack](https://img.shields.io/badge/Stack-MERN-blue?style=for-the-badge)](https://www.mongodb.com/mern-stack)
