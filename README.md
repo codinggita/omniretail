@@ -1,6 +1,8 @@
 # 📦 OmniRetail — The Future of Phygital Commerce
 
-![OmniRetail Hero Banner](file:///C:/Users/Saptak/.gemini/antigravity/brain/92b741ce-abf4-4589-96a8-a7fe76eb886b/omniretail_hero_banner_1776916457895.png)
+<img width="1918" height="870" alt="image" src="https://github.com/user-attachments/assets/998e9a41-c322-4df3-844e-3fde33093baf" /> <br/> <br/>
+<img width="1918" height="870" alt="image" src="https://github.com/user-attachments/assets/b7b2d8ce-19f0-4976-a9ca-57f52e021d5a" />
+
 
 [![MERN Stack](https://img.shields.io/badge/Stack-MERN-blue?style=for-the-badge)](https://www.mongodb.com/mern-stack)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
