@@ -44,10 +44,13 @@ app.use('/v1/users', userRoutes);
 
 import dashboardRoutes from './routes/dashboard.routes.js';
 import negotiationRoutes from './routes/negotiation.routes.js';
+import productRoutes from './routes/product.routes.js';
 
 app.use('/api/v1/dashboard', dashboardRoutes);
 app.use('/v1/dashboard', dashboardRoutes);
 app.use('/api/v1/negotiations', negotiationRoutes);
 app.use('/v1/negotiations', negotiationRoutes);
+app.use('/api/v1/products', productRoutes);
+app.use('/v1/products', productRoutes);
 
 export default app;

@@ -7,6 +7,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import Sidebar from './components/layout/Sidebar';
 import Header from './components/layout/Header';
 import Home from './pages/Home';
+import Inventory from './pages/Inventory';
+import ProductDetail from './pages/ProductDetail';
 import './index.css';
 
 // Dashboard Layout Wrapper
@@ -42,6 +44,9 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        <Route path="/shop" element={<ProtectedRoute><DashboardLayout><Inventory /></DashboardLayout></ProtectedRoute>} />
+        <Route path="/inventory" element={<ProtectedRoute><DashboardLayout><Inventory /></DashboardLayout></ProtectedRoute>} />
+        <Route path="/product/:id" element={<ProtectedRoute><DashboardLayout><ProductDetail /></DashboardLayout></ProtectedRoute>} />
       </Routes>
     </Router>
   );
