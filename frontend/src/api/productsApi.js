@@ -3,32 +3,32 @@ import apiClient from './apiClient.js';
 export const getProducts = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
   const res = await apiClient.get(`/products${query ? `?${query}` : ''}`);
-  return res.data;
+  return res;
 };
 
 export const getProductsByCategory = async (storeCategory) => {
   const res = await apiClient.get(`/products?category=${encodeURIComponent(storeCategory)}`);
-  return res.data;
+  return res;
 };
 
 export const getProductById = async (id) => {
   const res = await apiClient.get(`/products/${id}`);
-  return res.data;
+  return res;
 };
 
 export const createProduct = async (data) => {
   const res = await apiClient.post('/products', data);
-  return res.data;
+  return res;
 };
 
 export const updateProduct = async (id, data) => {
   const res = await apiClient.put(`/products/${id}`, data);
-  return res.data;
+  return res;
 };
 
 export const searchProducts = async (query) => {
   const res = await apiClient.get(`/products?search=${encodeURIComponent(query)}`);
-  return res.data;
+  return res;
 };
 
 export const getStoreCategories = () => [

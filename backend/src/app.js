@@ -27,8 +27,8 @@ app.use((req, res, next) => {
   console.log(`[DEBUG] ${req.method} ${req.url}`);
   next();
 });
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Basic health check route
 app.get('/api/v1/health', (req, res) => {
