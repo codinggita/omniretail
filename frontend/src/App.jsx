@@ -10,10 +10,6 @@ import Home from './pages/Home';
 import Inventory from './pages/Inventory';
 import ProductDetail from './pages/ProductDetail';
 import Negotiation from './pages/Negotiation';
-import Orders from './pages/Orders';
-import Customers from './pages/Customers';
-import Settings from './pages/Settings';
-import StoreLocator from './pages/StoreLocator';
 import './index.css';
 
 // Dashboard Layout Wrapper
@@ -53,10 +49,6 @@ function App() {
         <Route path="/inventory" element={<ProtectedRoute><DashboardLayout><Inventory /></DashboardLayout></ProtectedRoute>} />
         <Route path="/product/:id" element={<ProtectedRoute><DashboardLayout><ProductDetail /></DashboardLayout></ProtectedRoute>} />
         <Route path="/negotiation/:id" element={<ProtectedRoute><DashboardLayout><Negotiation /></DashboardLayout></ProtectedRoute>} />
-        <Route path="/orders" element={<ProtectedRoute><DashboardLayout><Orders /></DashboardLayout></ProtectedRoute>} />
-        <Route path="/customers" element={<ProtectedRoute><DashboardLayout><Customers /></DashboardLayout></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
-        <Route path="/locator" element={<ProtectedRoute><DashboardLayout><StoreLocator /></DashboardLayout></ProtectedRoute>} />
       </Routes>
     </Router>
   );
