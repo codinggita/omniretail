@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getProducts, createProduct, updateProduct, deleteProduct } from '../api/productsApi';
+import { createNegotiation } from '../api/negotiationsApi';
 
 const statusConfig = {
   'in_stock': {
