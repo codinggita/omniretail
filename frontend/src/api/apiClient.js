@@ -81,6 +81,7 @@ const apiClient = {
   put:    (path, body, opts = {}) => sendRequest(path, { ...opts, method: 'PUT',    body: JSON.stringify(body) }),
   patch:  (path, body, opts = {}) => sendRequest(path, { ...opts, method: 'PATCH',  body: JSON.stringify(body) }),
   remove: (path, opts = {})       => sendRequest(path, { ...opts, method: 'DELETE' }),
+  delete: (path, opts = {})       => sendRequest(path, { ...opts, method: 'DELETE' }),
 };
 
 export default apiClient;
