@@ -1,4 +1,56 @@
 import Negotiation from '../models/negotiation.model.js';
+import Product from '../models/product.model.js';
+
+// @desc  Create a new negotiation
+// @route POST /api/v1/negotiations
+export const createNegotiation = async (req, res) => {
+  try {
+    const { productId } = req.body;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    // Check if there's already an active negotiation for this user and product
+    const existing = await Negotiation.findOne({
+      productSku: product.sku,
+      customerName: req.user.name,
+      status: 'active'
+    });
+
+    if (existing) {
+      return res.json(existing);
+    }
+
+    const negotiation = await Negotiation.create({
+      productName: product.name,
+      productImage: product.images?.[0]?.url,
+      productSku: product.sku,
+      basePrice: product.basePrice,
+      minAcceptablePrice: product.minAcceptablePrice || (product.basePrice * 0.8),
+      currentOffer: product.basePrice,
+      customerName: req.user.name,
+      customerInitials: req.user.name.split(' ').map(n => n[0]).join('').toUpperCase(),
+      status: 'active',
+      roundsTotal: 3,
+      roundsUsed: 0,
+      messages: [
+        {
+          sender: 'bot',
+          content: `Hi ${req.user.name.split(' ')[0]}! I'm the OmniRetail AI assistant. I see you're interested in the ${product.name}. The base price is ₹${product.basePrice.toLocaleString('en-IN')}. What's your best offer?`,
+          timestamp: new Date()
+        }
+      ]
+    });
+
+    res.status(201).json(negotiation);
+  } catch (error) {
+    console.error('Create negotiation error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 
 // @desc  Get all active negotiations
 // @route GET /api/v1/negotiations

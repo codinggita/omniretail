@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getProducts, createProduct } from '../api/productsApi';
+import { getProducts, createProduct, updateProduct, deleteProduct } from '../api/productsApi';
 
 const statusConfig = {
   'in_stock': {
@@ -43,6 +43,7 @@ const Inventory = () => {
   // Modal State
   const [showModal, setShowModal] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
   const [formData, setFormData] = useState({
     sku: '',
     name: '',
@@ -51,6 +52,19 @@ const Inventory = () => {
     stockQuantity: '',
     imageBase64: ''
   });
+
+  const handleEdit = (product) => {
+    setEditingProduct(product);
+    setFormData({
+      sku: product.sku,
+      name: product.name,
+      basePrice: product.basePrice,
+      category: product.category,
+      stockQuantity: product.stockQuantity,
+      imageBase64: product.images?.[0]?.url || ''
+    });
+    setShowModal(true);
+  };
 
   useEffect(() => {
     fetchProducts();
@@ -85,7 +99,7 @@ const Inventory = () => {
     setIsSubmitting(true);
     try {
       const stock = Number(formData.stockQuantity);
-      const newProduct = {
+      const productData = {
         sku: formData.sku,
         name: formData.name,
         basePrice: Number(formData.basePrice),
@@ -96,15 +110,43 @@ const Inventory = () => {
         images: formData.imageBase64 ? [{ url: formData.imageBase64, isPrimary: true }] : [],
         negotiationEnabled: true
       };
-      await createProduct(newProduct);
+
+      if (editingProduct) {
+        await updateProduct(editingProduct._id, productData);
+      } else {
+        await createProduct(productData);
+      }
+
       await fetchProducts(); // Refresh list
       setShowModal(false);
+      setEditingProduct(null);
       setFormData({ sku: '', name: '', basePrice: '', category: 'Electronics', stockQuantity: '', imageBase64: '' });
     } catch (error) {
-      console.error('Error creating product:', error);
-      alert('Failed to create product. Check console.');
+      console.error('Error saving product:', error);
+      alert('Failed to save product. Check console.');
     } finally {
       setIsSubmitting(false);
+    }
+  };
+  const handleDelete = async (id) => {
+    if (window.confirm('Are you sure you want to delete this product?')) {
+      try {
+        await deleteProduct(id);
+        fetchProducts();
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        alert('Failed to delete product.');
+      }
+    }
+  };
+
+  const handleOffer = async (product) => {
+    try {
+      const neg = await createNegotiation(product._id);
+      navigate(`/negotiation/${neg._id}`);
+    } catch (error) {
+      console.error('Error starting negotiation:', error);
+      alert('Failed to start negotiation.');
     }
   };
 
@@ -346,13 +388,16 @@ const Inventory = () => {
                   {/* Actions */}
                   <div className="flex items-center gap-2 mt-2">
                     {!isCustomer && (
-                      <button className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-surface-container border border-outline-variant text-on-surface-variant hover:text-on-surface hover:border-zinc-600 font-inter text-xs font-semibold transition-all outline-none">
+                      <button 
+                        onClick={() => handleEdit(product)}
+                        className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-surface-container border border-outline-variant text-on-surface-variant hover:text-on-surface hover:border-zinc-600 font-inter text-xs font-semibold transition-all outline-none"
+                      >
                         <span className="material-symbols-outlined text-[16px]">edit</span>
                         Edit
                       </button>
                     )}
                     <button 
-                      onClick={() => navigate(`/product/${product._id}`)}
+                      onClick={() => isCustomer ? navigate(`/product/${product._id}`) : handleOffer(product)}
                       className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl bg-primary-container/10 border border-primary-container/30 text-primary-container hover:bg-primary-container/20 font-inter text-xs font-semibold transition-all outline-none"
                     >
                       <span className="material-symbols-outlined text-[16px]">{isCustomer ? 'shopping_cart' : 'handshake'}</span>
@@ -428,15 +473,32 @@ const Inventory = () => {
 
                   {/* Actions */}
                   <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => isCustomer ? navigate(`/product/${product._id}`) : handleOffer(product)}
+                      className="w-8 h-8 rounded-lg bg-primary-container/10 border border-primary-container/30 flex items-center justify-center text-primary-container hover:bg-primary-container/20 transition-all outline-none"
+                      title={isCustomer ? 'Buy' : 'Offer'}
+                    >
+                      <span className="material-symbols-outlined text-[16px]">{isCustomer ? 'shopping_cart' : 'handshake'}</span>
+                    </button>
                     <Link
                       to={`/product/${product._id}`}
                       className="w-8 h-8 rounded-lg bg-surface-container border border-outline-variant flex items-center justify-center text-outline hover:text-on-surface hover:border-zinc-600 transition-all outline-none"
+                      title="View Details"
                     >
                       <span className="material-symbols-outlined text-[16px]">open_in_new</span>
                     </Link>
                     {!isCustomer && (
                       <>
-                        <button className="w-8 h-8 rounded-lg bg-surface-container border border-outline-variant flex items-center justify-center text-outline hover:text-error hover:border-error/50 hover:bg-error/10 transition-all outline-none">
+                        <button 
+                          onClick={() => handleEdit(product)}
+                          className="w-8 h-8 rounded-lg bg-surface-container border border-outline-variant flex items-center justify-center text-outline hover:text-on-surface hover:border-zinc-600 transition-all outline-none"
+                        >
+                          <span className="material-symbols-outlined text-[16px]">edit</span>
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(product._id)}
+                          className="w-8 h-8 rounded-lg bg-surface-container border border-outline-variant flex items-center justify-center text-outline hover:text-error hover:border-error/50 hover:bg-error/10 transition-all outline-none"
+                        >
                           <span className="material-symbols-outlined text-[16px]">delete</span>
                         </button>
                       </>
@@ -453,7 +515,7 @@ const Inventory = () => {
       {showModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm">
           <div className="bg-zinc-950 border border-zinc-800 rounded-2xl w-full max-w-lg p-6 relative overflow-hidden shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-4">Add New Product</h3>
+            <h3 className="text-xl font-bold text-white mb-4">{editingProduct ? 'Edit Product' : 'Add New Product'}</h3>
             <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-10">
               
               <div className="grid grid-cols-2 gap-4">
@@ -492,7 +554,17 @@ const Inventory = () => {
               </div>
 
               <div className="flex gap-3 justify-end mt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 rounded-lg border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition">Cancel</button>
+                <button 
+                  type="button" 
+                  onClick={() => {
+                    setShowModal(false);
+                    setEditingProduct(null);
+                    setFormData({ sku: '', name: '', basePrice: '', category: 'Electronics', stockQuantity: '', imageBase64: '' });
+                  }} 
+                  className="px-4 py-2 rounded-lg border border-zinc-700 text-zinc-300 hover:bg-zinc-800 transition"
+                >
+                  Cancel
+                </button>
                 <button type="submit" disabled={isSubmitting} className="px-4 py-2 rounded-lg bg-primary-container text-on-primary-container font-bold hover:opacity-90 disabled:opacity-50 flex items-center gap-2">
                   {isSubmitting ? 'Saving...' : 'Save Product'}
                 </button>

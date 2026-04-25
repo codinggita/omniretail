@@ -26,6 +26,11 @@ export const updateProduct = async (id, data) => {
   return res;
 };
 
+export const deleteProduct = async (id) => {
+  const res = await apiClient.delete(`/products/${id}`);
+  return res;
+};
+
 export const searchProducts = async (query) => {
   const res = await apiClient.get(`/products?search=${encodeURIComponent(query)}`);
   return res;
