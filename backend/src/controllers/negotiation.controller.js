@@ -1,5 +1,26 @@
 import Negotiation from '../models/negotiation.model.js';
 import Product from '../models/product.model.js';
+import Order from '../models/order.model.js';
+
+/**
+ * Helper to create an order from an accepted negotiation
+ */
+const createOrderFromNegotiation = async (negotiation) => {
+  const orderId = `ORD-${Math.floor(10000 + Math.random() * 90000)}`;
+  
+  return await Order.create({
+    orderId,
+    customer: negotiation.customerName,
+    initials: negotiation.customerInitials,
+    total: negotiation.currentOffer,
+    status: 'Processing',
+    items: [{
+      name: negotiation.productName,
+      qty: 1,
+      price: negotiation.currentOffer
+    }]
+  });
+};
 
 // @desc  Create a new negotiation
 // @route POST /api/v1/negotiations
@@ -98,9 +119,11 @@ export const sendMessage = async (req, res) => {
       negotiation.status = 'accepted';
       negotiation.messages.push({
         sender: 'bot',
-        content: `Deal! I accept ₹${offer.toLocaleString('en-IN')}. Your order will be confirmed shortly.`,
+        content: `Deal! I accept ₹${offer.toLocaleString('en-IN')}. Your order has been confirmed.`,
         offer,
       });
+      // Create the order in the database
+      await createOrderFromNegotiation(negotiation);
     } else if (negotiation.roundsUsed >= negotiation.roundsTotal) {
       const finalPrice = negotiation.minAcceptablePrice;
       negotiation.messages.push({
@@ -133,12 +156,19 @@ export const sendMessage = async (req, res) => {
 // @route PUT /api/v1/negotiations/:id/accept
 export const acceptNegotiation = async (req, res) => {
   try {
-    const negotiation = await Negotiation.findByIdAndUpdate(
-      req.params.id,
-      { status: 'accepted' },
-      { new: true }
-    );
+    const negotiation = await Negotiation.findById(req.params.id);
     if (!negotiation) return res.status(404).json({ message: 'Not found' });
+
+    if (negotiation.status === 'accepted') {
+      return res.status(400).json({ message: 'Negotiation already accepted' });
+    }
+
+    negotiation.status = 'accepted';
+    await negotiation.save();
+
+    // Create the order in the database
+    await createOrderFromNegotiation(negotiation);
+
     res.json(negotiation);
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
