@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import useAuthStore from '../../store/authStore';
-import useCartStore from '../../store/cartStore';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../../store/slices/authSlice';
 
 const Navbar = () => {
-  const { user, logout } = useAuthStore();
-  const { items } = useCartStore();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { items } = useSelector((state) => state.cart);
 
   return (
     <nav className="navbar">
@@ -25,7 +26,7 @@ const Navbar = () => {
             {user ? (
               <div className="user-menu">
                 <span className="user-name">Hello, {user.name}</span>
-                <button onClick={logout} className="logout-btn">Logout</button>
+                <button onClick={() => dispatch(logout())} className="logout-btn">Logout</button>
               </div>
             ) : (
               <Link to="/login" className="login-btn">Login</Link>
