@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import userRoutes from './routes/user.routes.js';
+import customerRoutes from './routes/customer.routes.js';
+import orderRoutes from './routes/order.routes.js';
 
 const app = express();
 
@@ -52,5 +54,9 @@ app.use('/api/v1/negotiations', negotiationRoutes);
 app.use('/v1/negotiations', negotiationRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/v1/products', productRoutes);
+app.use('/api/v1/orders', orderRoutes);
+app.use('/v1/orders', orderRoutes);
+app.use('/api/v1/customers', customerRoutes);
+app.use('/v1/customers', customerRoutes);
 
 export default app;
