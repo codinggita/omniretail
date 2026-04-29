@@ -1,11 +1,11 @@
-import Order from '../models/order.model.js';
-import Customer from '../models/customer.model.js';
-import Negotiation from '../models/negotiation.model.js';
+const Order = require('../models/order.model.js');
+const Customer = require('../models/customer.model.js');
+const Negotiation = require('../models/negotiation.model.js');
 
 // @desc  Get dashboard KPI stats
 // @route GET /api/v1/dashboard/stats
 // @access Private
-export const getDashboardStats = async (req, res) => {
+exports.getDashboardStats = async (req, res) => {
   try {
     const totalNegotiations = await Negotiation.countDocuments();
     const acceptedNegotiations = await Negotiation.countDocuments({ status: 'accepted' });

@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
+const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
   {
@@ -57,4 +57,4 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 
 const User = mongoose.model('User', userSchema);
 
-export default User;
+module.exports = User;

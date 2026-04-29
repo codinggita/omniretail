@@ -1,8 +1,8 @@
-import Order from '../models/order.model.js';
+const Order = require('../models/order.model.js');
 
 // @desc  Get all orders (with optional status filter and search)
 // @route GET /api/v1/orders
-export const getOrders = async (req, res) => {
+exports.getOrders = async (req, res) => {
   try {
     const { status, search } = req.query;
     const query = {};
@@ -17,7 +17,7 @@ export const getOrders = async (req, res) => {
 
 // @desc  Get order stats (counts for dashboard widgets)
 // @route GET /api/v1/orders/stats
-export const getOrderStats = async (req, res) => {
+exports.getOrderStats = async (req, res) => {
   try {
     const newOrders = await Order.countDocuments();
     const pending = await Order.countDocuments({ status: 'Processing' });
@@ -30,7 +30,7 @@ export const getOrderStats = async (req, res) => {
 
 // @desc  Update the status of a specific order
 // @route PUT /api/v1/orders/:id/status
-export const updateOrderStatus = async (req, res) => {
+exports.updateOrderStatus = async (req, res) => {
   try {
     const order = await Order.findByIdAndUpdate(
       req.params.id,

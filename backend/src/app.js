@@ -1,14 +1,13 @@
-import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
+const express = require('express');
+const cors = require('cors');
 
-// ─── Import all route files at the top (ES Module rule) ──────────────────────
-import userRoutes from './routes/user.routes.js';
-import dashboardRoutes from './routes/dashboard.routes.js';
-import negotiationRoutes from './routes/negotiation.routes.js';
-import productRoutes from './routes/product.routes.js';
-import orderRoutes from './routes/order.routes.js';
-import customerRoutes from './routes/customer.routes.js';
+// ─── Import all route files
+const userRoutes = require('./routes/user.routes.js');
+const dashboardRoutes = require('./routes/dashboard.routes.js');
+const negotiationRoutes = require('./routes/negotiation.routes.js');
+const productRoutes = require('./routes/product.routes.js');
+const orderRoutes = require('./routes/order.routes.js');
+const customerRoutes = require('./routes/customer.routes.js');
 
 const app = express();
 
@@ -28,7 +27,6 @@ app.use(cors({
   },
   credentials: true,
 }));
-app.use(morgan('dev'));
 app.use((req, res, next) => {
   console.log(`[DEBUG] ${req.method} ${req.url}`);
   next();
@@ -58,4 +56,4 @@ app.use('/v1/orders', orderRoutes);
 app.use('/api/v1/customers', customerRoutes);
 app.use('/v1/customers', customerRoutes);
 
-export default app;
+module.exports = app;
