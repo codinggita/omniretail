@@ -70,13 +70,17 @@ const Sidebar = () => {
 
       {/* Footer Nav — always visible with border-t separator, matching HTML design */}
       <div className="mt-auto flex flex-col gap-1 border-t border-zinc-800/70 pt-4 mx-4 font-inter text-sm font-medium">
-        <a
-          href="mailto:support@omniretail.com"
-          className="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900/50 transition-all duration-200 rounded-lg active:scale-95"
+        <Link
+          to="/support"
+          className={`flex items-center gap-3 px-4 py-3 transition-all duration-200 rounded-lg active:scale-95 ${
+            location.pathname === '/support'
+              ? 'text-primary-container bg-primary-container/5 border-r-4 border-primary-container'
+              : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900/50'
+          }`}
         >
-          <span className="material-symbols-outlined">help</span>
+          <span className="material-symbols-outlined" style={location.pathname === '/support' ? { fontVariationSettings: "'FILL' 1" } : {}}>help</span>
           <span>Support</span>
-        </a>
+        </Link>
         <button
           onClick={handleLogout}
           className="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900/50 transition-all duration-200 rounded-lg w-full text-left active:scale-95"

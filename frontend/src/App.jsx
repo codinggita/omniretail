@@ -14,6 +14,7 @@ import Orders from './pages/Orders';
 import Customers from './pages/Customers';
 import StoreLocator from './pages/StoreLocator';
 import Settings from './pages/Settings';
+import Support from './pages/Support';
 import './index.css';
 
 // Dashboard Layout Wrapper
@@ -57,9 +58,11 @@ function App() {
         <Route path="/customers" element={<ProtectedRoute><DashboardLayout><Customers /></DashboardLayout></ProtectedRoute>} />
         <Route path="/locator" element={<ProtectedRoute><DashboardLayout><StoreLocator /></DashboardLayout></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute><DashboardLayout><Settings /></DashboardLayout></ProtectedRoute>} />
+        <Route path="/support" element={<ProtectedRoute><DashboardLayout><Support /></DashboardLayout></ProtectedRoute>} />
       </Routes>
     </Router>
   );
 }
+
 
 export default App;
