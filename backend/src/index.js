@@ -1,6 +1,6 @@
-import dotenv from 'dotenv';
-import connectDB from './config/db.js';
-import app from './app.js';
+const dotenv = require('dotenv');
+const connectDB = require('./config/db.js');
+const app = require('./app.js');
 
 // Load env vars
 dotenv.config();
@@ -17,4 +17,4 @@ if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
   });
 }
 
-export default app;
+module.exports = app;

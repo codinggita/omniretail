@@ -1,8 +1,8 @@
-import Product from '../models/product.model.js';
+const Product = require('../models/product.model.js');
 
 // @desc  Get all products
 // @route GET /api/v1/products
-export const getProducts = async (req, res) => {
+exports.getProducts = async (req, res) => {
   try {
     const { category, search } = req.query;
     const query = {};
@@ -17,7 +17,7 @@ export const getProducts = async (req, res) => {
 
 // @desc  Get product by ID
 // @route GET /api/v1/products/:id
-export const getProductById = async (req, res) => {
+exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ message: 'Product not found' });
@@ -29,7 +29,7 @@ export const getProductById = async (req, res) => {
 
 // @desc  Create product
 // @route POST /api/v1/products
-export const createProduct = async (req, res) => {
+exports.createProduct = async (req, res) => {
   try {
     const product = await Product.create(req.body);
     res.status(201).json(product);
@@ -40,7 +40,7 @@ export const createProduct = async (req, res) => {
 
 // @desc  Update product
 // @route PUT /api/v1/products/:id
-export const updateProduct = async (req, res) => {
+exports.updateProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!product) return res.status(404).json({ message: 'Product not found' });

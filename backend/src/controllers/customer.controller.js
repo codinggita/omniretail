@@ -1,8 +1,8 @@
-import Customer from '../models/customer.model.js';
+const Customer = require('../models/customer.model.js');
 
 // @desc  Get all customers
 // @route GET /api/v1/customers
-export const getCustomers = async (req, res) => {
+exports.getCustomers = async (req, res) => {
   try {
     const { search } = req.query;
     const query = {};
@@ -16,7 +16,7 @@ export const getCustomers = async (req, res) => {
 
 // @desc  Get customer stats
 // @route GET /api/v1/customers/stats
-export const getCustomerStats = async (req, res) => {
+exports.getCustomerStats = async (req, res) => {
   try {
     const total = await Customer.countDocuments();
     const activeToday = await Customer.countDocuments({ status: { $in: ['Active', 'Top'] } });

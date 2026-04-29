@@ -1,10 +1,10 @@
-import User from '../models/user.model.js';
-import generateToken from '../utils/generateToken.js';
+const User = require('../models/user.model.js');
+const generateToken = require('../utils/generateToken.js');
 
 // @desc    Register a new user
 // @route   POST /api/v1/users/register
 // @access  Public
-export const registerUser = async (req, res) => {
+exports.registerUser = async (req, res) => {
   try {
     console.log('Incoming Register Request:', req.body);
     const { name, email, password, role, retailerCategory } = req.body;
@@ -53,7 +53,7 @@ export const registerUser = async (req, res) => {
 // @desc    Auth user & get token
 // @route   POST /api/v1/users/login
 // @access  Public
-export const loginUser = async (req, res) => {
+exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -81,7 +81,7 @@ export const loginUser = async (req, res) => {
 // @desc    Get user profile
 // @route   GET /api/v1/users/profile
 // @access  Private
-export const getUserProfile = async (req, res) => {
+exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);
 

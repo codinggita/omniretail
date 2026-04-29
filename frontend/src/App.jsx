@@ -12,6 +12,7 @@ import ProductDetail from './pages/ProductDetail';
 import Negotiation from './pages/Negotiation';
 import Orders from './pages/Orders';
 import Customers from './pages/Customers';
+import StoreLocator from './pages/StoreLocator';
 import './index.css';
 
 // Dashboard Layout Wrapper
@@ -53,6 +54,7 @@ function App() {
         <Route path="/negotiation/:id" element={<ProtectedRoute><DashboardLayout><Negotiation /></DashboardLayout></ProtectedRoute>} />
         <Route path="/orders" element={<ProtectedRoute><DashboardLayout><Orders /></DashboardLayout></ProtectedRoute>} />
         <Route path="/customers" element={<ProtectedRoute><DashboardLayout><Customers /></DashboardLayout></ProtectedRoute>} />
+        <Route path="/locator" element={<ProtectedRoute><DashboardLayout><StoreLocator /></DashboardLayout></ProtectedRoute>} />
       </Routes>
     </Router>
   );

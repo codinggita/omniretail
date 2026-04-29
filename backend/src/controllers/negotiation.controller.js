@@ -1,6 +1,6 @@
-import Negotiation from '../models/negotiation.model.js';
-import Product from '../models/product.model.js';
-import Order from '../models/order.model.js';
+const Negotiation = require('../models/negotiation.model.js');
+const Product = require('../models/product.model.js');
+const Order = require('../models/order.model.js');
 
 /**
  * Helper to create an order from an accepted negotiation
@@ -24,7 +24,7 @@ const createOrderFromNegotiation = async (negotiation) => {
 
 // @desc  Create a new negotiation
 // @route POST /api/v1/negotiations
-export const createNegotiation = async (req, res) => {
+exports.createNegotiation = async (req, res) => {
   try {
     const { productId } = req.body;
     const product = await Product.findById(productId);
@@ -78,7 +78,7 @@ export const createNegotiation = async (req, res) => {
 
 // @desc  Get all active negotiations
 // @route GET /api/v1/negotiations
-export const getNegotiations = async (req, res) => {
+exports.getNegotiations = async (req, res) => {
   try {
     const negotiations = await Negotiation.find({ status: 'active' }).sort({ createdAt: -1 });
     res.json(negotiations);
@@ -89,7 +89,7 @@ export const getNegotiations = async (req, res) => {
 
 // @desc  Get negotiation by ID
 // @route GET /api/v1/negotiations/:id
-export const getNegotiationById = async (req, res) => {
+exports.getNegotiationById = async (req, res) => {
   try {
     const negotiation = await Negotiation.findById(req.params.id);
     if (!negotiation) return res.status(404).json({ message: 'Negotiation not found' });
@@ -101,7 +101,7 @@ export const getNegotiationById = async (req, res) => {
 
 // @desc  Send a message / place a bid
 // @route POST /api/v1/negotiations/:id/message
-export const sendMessage = async (req, res) => {
+exports.sendMessage = async (req, res) => {
   try {
     const { content, offer } = req.body;
     const negotiation = await Negotiation.findById(req.params.id);
@@ -154,7 +154,7 @@ export const sendMessage = async (req, res) => {
 
 // @desc  Accept a negotiation
 // @route PUT /api/v1/negotiations/:id/accept
-export const acceptNegotiation = async (req, res) => {
+exports.acceptNegotiation = async (req, res) => {
   try {
     const negotiation = await Negotiation.findById(req.params.id);
     if (!negotiation) return res.status(404).json({ message: 'Not found' });
@@ -177,7 +177,7 @@ export const acceptNegotiation = async (req, res) => {
 
 // @desc  Reject a negotiation
 // @route PUT /api/v1/negotiations/:id/reject
-export const rejectNegotiation = async (req, res) => {
+exports.rejectNegotiation = async (req, res) => {
   try {
     const negotiation = await Negotiation.findByIdAndUpdate(
       req.params.id,

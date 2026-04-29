@@ -1,11 +1,11 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   getProducts,
   getProductById,
   createProduct,
   updateProduct,
-} from '../controllers/product.controller.js';
-import { protect } from '../middlewares/auth.middleware.js';
+} = require('../controllers/product.controller.js');
+const { protect } = require('../middlewares/auth.middleware.js');
 
 const router = express.Router();
 
@@ -14,4 +14,4 @@ router.get('/:id', protect, getProductById);
 router.post('/', protect, createProduct);
 router.put('/:id', protect, updateProduct);
 
-export default router;
+module.exports = router;

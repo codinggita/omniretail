@@ -1,13 +1,13 @@
-import express from 'express';
-import {
+const express = require('express');
+const {
   getNegotiations,
   getNegotiationById,
   sendMessage,
   acceptNegotiation,
   rejectNegotiation,
   createNegotiation,
-} from '../controllers/negotiation.controller.js';
-import { protect } from '../middlewares/auth.middleware.js';
+} = require('../controllers/negotiation.controller.js');
+const { protect } = require('../middlewares/auth.middleware.js');
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post('/:id/message', protect, sendMessage);
 router.put('/:id/accept', protect, acceptNegotiation);
 router.put('/:id/reject', protect, rejectNegotiation);
 
-export default router;
+module.exports = router;

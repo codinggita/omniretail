@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const feedbackSchema = new mongoose.Schema(
   {
@@ -22,4 +22,4 @@ const customerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model('Customer', customerSchema);
+module.exports = mongoose.model('Customer', customerSchema);
