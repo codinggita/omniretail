@@ -1,20 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { generateApiKey, getProfile } from '../api/authApi';
+import { useSelector, useDispatch } from 'react-redux';
+import { generateApiKey, getProfile, updateProfile } from '../api/authApi';
+import { factoryReset } from '../api/dashboardApi';
 
 const Settings = () => {
   const { user: reduxUser } = useSelector((state) => state.auth);
   const [user, setUser] = useState(reduxUser);
   const [apiKey, setApiKey] = useState('');
   const [loadingKey, setLoadingKey] = useState(false);
+  const [loadingSave, setLoadingSave] = useState(false);
+  const [loadingReset, setLoadingReset] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  // Form states
+  const [formData, setFormData] = useState({
+    name: '',
+    email: ''
+  });
+
   useEffect(() => {
-    // Refresh full profile data (to get apiKeyCreatedAt and hasApiKey)
     const fetchProfile = async () => {
       try {
         const data = await getProfile();
         setUser(data);
+        setFormData({
+          name: data.name || '',
+          email: data.email || ''
+        });
       } catch (err) {
         console.error('Failed to fetch profile:', err);
       }
@@ -29,13 +41,43 @@ const Settings = () => {
       setLoadingKey(true);
       const data = await generateApiKey();
       setApiKey(data.apiKey);
-      // Refresh profile to update hasApiKey and createdAt
       const updatedProfile = await getProfile();
       setUser(updatedProfile);
     } catch (err) {
       alert('Failed to generate API key');
     } finally {
       setLoadingKey(false);
+    }
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      setLoadingSave(true);
+      const updated = await updateProfile(formData);
+      setUser(updated);
+      alert('Settings saved successfully!');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to save settings');
+    } finally {
+      setLoadingSave(false);
+    }
+  };
+
+  const handleFactoryReset = async () => {
+    if (!window.confirm('CRITICAL WARNING: This will delete ALL inventory, orders, customers, and negotiations. This cannot be undone. Type "RESET" to confirm.')) return;
+    
+    const confirmation = window.prompt('Type "RESET" to confirm:');
+    if (confirmation !== 'RESET') return;
+
+    try {
+      setLoadingReset(true);
+      await factoryReset();
+      alert('Database cleared successfully.');
+      window.location.reload();
+    } catch (err) {
+      alert('Failed to reset database');
+    } finally {
+      setLoadingReset(false);
     }
   };
 
@@ -71,7 +113,8 @@ const Settings = () => {
               <input 
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all" 
                 type="text" 
-                defaultValue={user?.name}
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               />
             </div>
             <div>
@@ -88,14 +131,20 @@ const Settings = () => {
               <input 
                 className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-zinc-200 focus:outline-none focus:border-blue-500/50" 
                 type="email" 
-                defaultValue={user?.email}
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               />
             </div>
           </div>
           
           <div className="mt-auto pt-6 flex justify-end">
-            <button className="bg-blue-500 hover:bg-blue-600 text-white font-bold text-xs uppercase tracking-widest px-8 py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20">
-              Save Changes
+            <button 
+              onClick={handleSaveChanges}
+              disabled={loadingSave}
+              className="bg-blue-500 hover:bg-blue-600 disabled:opacity-50 text-white font-bold text-xs uppercase tracking-widest px-8 py-3 rounded-xl transition-all shadow-lg shadow-blue-500/20 flex items-center gap-2"
+            >
+              {loadingSave && <span className="material-symbols-outlined animate-spin text-[16px]">sync</span>}
+              {loadingSave ? 'Saving...' : 'Save Changes'}
             </button>
           </div>
         </div>
@@ -254,8 +303,13 @@ const Settings = () => {
                 <strong className="block text-zinc-200 text-sm">Factory Reset</strong>
                 <span className="text-zinc-500 text-xs">Clears all inventory data</span>
               </div>
-              <button className="whitespace-nowrap px-8 py-3 rounded-xl border border-red-500/50 text-red-400 hover:bg-red-500/10 transition-all font-bold text-xs uppercase tracking-widest active:scale-95">
-                Reset Data
+              <button 
+                onClick={handleFactoryReset}
+                disabled={loadingReset}
+                className="whitespace-nowrap px-8 py-3 rounded-xl border border-red-500/50 text-red-400 hover:bg-red-500/10 transition-all font-bold text-xs uppercase tracking-widest active:scale-95 flex items-center gap-2"
+              >
+                {loadingReset && <span className="material-symbols-outlined animate-spin text-[16px]">sync</span>}
+                {loadingReset ? 'Resetting...' : 'Reset Data'}
               </button>
             </div>
           </div>
@@ -266,3 +320,4 @@ const Settings = () => {
 };
 
 export default Settings;
+

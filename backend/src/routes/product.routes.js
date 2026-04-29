@@ -4,6 +4,7 @@ const {
   getProductById,
   createProduct,
   updateProduct,
+  bulkImport,
 } = require('../controllers/product.controller.js');
 const { protect } = require('../middlewares/auth.middleware.js');
 
@@ -13,5 +14,6 @@ router.get('/', protect, getProducts);
 router.get('/:id', protect, getProductById);
 router.post('/', protect, createProduct);
 router.put('/:id', protect, updateProduct);
+router.post('/import', protect, bulkImport);
 
 module.exports = router;

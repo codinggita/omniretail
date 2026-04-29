@@ -171,3 +171,16 @@ export const getStoreCategories = () => [
   { value: 'Beauty',            label: 'Beauty & Personal Care' },
   { value: 'General',           label: 'General / Multi-Category' },
 ];
+
+/**
+ * bulkImportProducts
+ *
+ * Sends a list of products to the server for bulk creation.
+ *
+ * @param {Array} products - Array of product objects
+ * @returns {Promise<Object>} Import result summary
+ */
+export const bulkImportProducts = async (products) => {
+  return apiClient.post('/products/import', { products });
+};
+

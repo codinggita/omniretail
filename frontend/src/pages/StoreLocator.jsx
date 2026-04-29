@@ -1,122 +1,53 @@
 import React, { useState, useEffect } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { getNearbyStores } from '../api/storesApi';
 
-const mapContainerStyle = {
-  width: '100%',
-  height: '100%'
-};
+// Fix for default marker icons in React Leaflet
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
-const center = {
-  lat: 12.9716,
-  lng: 77.5946
-};
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
-// Dark theme map styles
-const darkMapStyle = [
-  { elementType: "geometry", stylers: [{ color: "#212121" }] },
-  { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
-  { elementType: "labels.text.fill", stylers: [{ color: "#757575" }] },
-  { elementType: "labels.text.stroke", stylers: [{ color: "#212121" }] },
-  {
-    featureType: "administrative",
-    elementType: "geometry",
-    stylers: [{ color: "#757575" }],
-  },
-  {
-    featureType: "administrative.country",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#9e9e9e" }],
-  },
-  {
-    featureType: "administrative.land_parcel",
-    stylers: [{ visibility: "off" }],
-  },
-  {
-    featureType: "administrative.locality",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#bdbdbd" }],
-  },
-  {
-    featureType: "poi",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#757575" }],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "geometry",
-    stylers: [{ color: "#181818" }],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#616161" }],
-  },
-  {
-    featureType: "poi.park",
-    elementType: "labels.text.stroke",
-    stylers: [{ color: "#1b1b1b" }],
-  },
-  {
-    featureType: "road",
-    elementType: "geometry.fill",
-    stylers: [{ color: "#2c2c2c" }],
-  },
-  {
-    featureType: "road",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#8a8a8a" }],
-  },
-  {
-    featureType: "road.arterial",
-    elementType: "geometry",
-    stylers: [{ color: "#373737" }],
-  },
-  {
-    featureType: "road.highway",
-    elementType: "geometry",
-    stylers: [{ color: "#3c3c3c" }],
-  },
-  {
-    featureType: "road.highway.controlled_access",
-    elementType: "geometry",
-    stylers: [{ color: "#4e4e4e" }],
-  },
-  {
-    featureType: "road.local",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#616161" }],
-  },
-  {
-    featureType: "transit",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#757575" }],
-  },
-  {
-    featureType: "water",
-    elementType: "geometry",
-    stylers: [{ color: "#000000" }],
-  },
-  {
-    featureType: "water",
-    elementType: "labels.text.fill",
-    stylers: [{ color: "#3d3d3d" }],
-  },
-];
+// Create a custom blue icon to match the brand
+const customIcon = new L.Icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+const center = [12.9716, 77.5946]; // [lat, lng] for Leaflet
+
+// Component to handle map view updates
+const MapRefocus = ({ position }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (position) {
+      map.setView(position, 14, { animate: true });
+    }
+  }, [position, map]);
+  return null;
+};
 
 const StoreLocator = () => {
   const [stores, setStores] = useState([]);
   const [selectedStore, setSelectedStore] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { isLoaded } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
-  });
-
   useEffect(() => {
     const fetchStores = async () => {
-      const data = await getNearbyStores(center.lat, center.lng);
+      // Mock coordinates for Bengaluru
+      const data = await getNearbyStores(center[0], center[1]);
       setStores(data);
     };
     fetchStores();
@@ -134,59 +65,52 @@ const StoreLocator = () => {
   return (
     <div className="flex h-[calc(100vh-120px)] w-full overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950/50 backdrop-blur-xl">
       {/* Left side: Map */}
-      <div className="flex-1 relative border-r border-zinc-800 overflow-hidden bg-zinc-900/20">
-        {!isLoaded ? (
-          <div className="flex items-center justify-center h-full">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-          </div>
-        ) : (
-          <GoogleMap
-            mapContainerStyle={mapContainerStyle}
-            center={center}
-            zoom={12}
-            options={{
-              styles: darkMapStyle,
-              disableDefaultUI: true,
-              zoomControl: true,
-            }}
-          >
-            {stores.map(store => (
-              <Marker
-                key={store._id}
-                position={{ lat: store.location.coordinates[1], lng: store.location.coordinates[0] }}
-                onClick={() => onStoreClick(store)}
-                icon={{
-                  url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                }}
-              />
-            ))}
-
-            {selectedStore && (
-              <InfoWindow
-                position={{ 
-                  lat: selectedStore.location.coordinates[1], 
-                  lng: selectedStore.location.coordinates[0] 
-                }}
-                onCloseClick={() => setSelectedStore(null)}
-              >
-                <div className="p-2 min-w-[150px]">
-                  <h3 className="font-bold text-zinc-900">{selectedStore.name}</h3>
-                  <p className="text-sm text-zinc-600">{selectedStore.address}</p>
-                  <p className="text-xs text-zinc-500 mt-1">{selectedStore.phone}</p>
+      <div className="flex-1 relative border-r border-zinc-800 overflow-hidden bg-[#0e0e10]">
+        <MapContainer 
+          center={center} 
+          zoom={12} 
+          scrollWheelZoom={true}
+          style={{ height: '100%', width: '100%' }}
+          zoomControl={false} // We will use custom placement or standard
+        >
+          {/* CartoDB Dark Matter Tiles (Perfect for Dark Mode) */}
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          />
+          
+          {stores.map(store => (
+            <Marker
+              key={store._id}
+              position={[store.location.coordinates[1], store.location.coordinates[0]]}
+              icon={customIcon}
+              eventHandlers={{
+                click: () => onStoreClick(store),
+              }}
+            >
+              <Popup>
+                <div className="p-1">
+                  <h3 className="font-bold text-zinc-900">{store.name}</h3>
+                  <p className="text-xs text-zinc-600">{store.address}</p>
+                  <p className="text-[10px] text-zinc-500 mt-1">{store.phone}</p>
                 </div>
-              </InfoWindow>
-            )}
-          </GoogleMap>
-        )}
+              </Popup>
+            </Marker>
+          ))}
+
+          {selectedStore && (
+            <MapRefocus position={[selectedStore.location.coordinates[1], selectedStore.location.coordinates[0]]} />
+          )}
+        </MapContainer>
 
         {/* Search Overlay on Map */}
-        <div className="absolute top-6 left-6 z-10 w-80">
+        <div className="absolute top-6 left-6 z-[1000] w-80">
           <div className="relative group">
             <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-zinc-500 group-focus-within:text-blue-400 transition-colors">search</span>
             <input 
               type="text" 
               placeholder="Search store locations..."
-              className="w-full bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl pl-12 pr-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all shadow-xl"
+              className="w-full bg-zinc-900/90 backdrop-blur-md border border-zinc-800 rounded-2xl pl-12 pr-4 py-3 text-sm text-zinc-200 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 transition-all shadow-xl"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -272,3 +196,4 @@ const StoreLocator = () => {
 };
 
 export default StoreLocator;
+

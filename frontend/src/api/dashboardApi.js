@@ -15,14 +15,18 @@ import apiClient from './apiClient.js';
  *
  * Asks the server for the latest dashboard statistics.
  *
- * Example response from server:
- *   {
- *     totalSales: 120000,
- *     totalOrders: 340,
- *     activeUsers: 58,
- *     lowStockItems: 12
- *   }
- *
  * @returns {Promise<Object>} An object with all dashboard stat numbers
  */
 export const getDashboardStats = () => apiClient.get('/dashboard/stats');
+
+
+/**
+ * factoryReset
+ *
+ * Clears all transaction and inventory data from the database.
+ * WARNING: This action is irreversible.
+ *
+ * @returns {Promise<Object>} Server response message
+ */
+export const factoryReset = () => apiClient.delete('/dashboard/factory-reset');
+

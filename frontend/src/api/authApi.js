@@ -66,6 +66,19 @@ export const generateApiKey = async () => {
 };
 
 
+/**
+ * updateProfile
+ *
+ * Updates the current user's profile information.
+ *
+ * @param {Object} userData - Example: { name: 'Alice', email: 'a@b@com' }
+ * @returns The updated user profile
+ */
+export const updateProfile = async (userData) => {
+  return apiClient.put('/users/profile', userData);
+};
+
+
 // Bundle all the functions together so you can also do:
 //   import authApi from './authApi';
 //   authApi.login(...)
@@ -74,6 +87,8 @@ const authApi = {
   register,
   getProfile,
   generateApiKey,
+  updateProfile,
 };
 
 export default authApi;
+

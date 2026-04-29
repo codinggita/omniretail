@@ -49,3 +49,32 @@ exports.updateProduct = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+// @desc  Bulk import products
+// @route POST /api/v1/products/import
+// @access Private
+exports.bulkImport = async (req, res) => {
+  try {
+    const products = req.body.products;
+    if (!Array.isArray(products)) {
+      return res.status(400).json({ message: 'Invalid data format. Expected an array of products.' });
+    }
+
+    const result = await Product.insertMany(products, { ordered: false });
+    res.status(201).json({
+      message: `${result.length} products imported successfully`,
+      count: result.length
+    });
+  } catch (error) {
+    // If some succeeded but others failed (e.g. duplicate SKU)
+    if (error.insertedDocs) {
+      return res.status(207).json({
+        message: 'Partial import successful',
+        count: error.insertedDocs.length,
+        error: error.message
+      });
+    }
+    res.status(500).json({ message: 'Import failed', error: error.message });
+  }
+};
+
