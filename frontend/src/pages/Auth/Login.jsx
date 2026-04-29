@@ -31,7 +31,12 @@ const Login = () => {
   }, [location, dispatch, navigate]);
 
   const handleGoogleLogin = () => {
-    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    // Detect if we are on localhost or production
+    const isLocal = window.location.hostname === 'localhost';
+    const backendUrl = isLocal 
+      ? 'http://localhost:5000' 
+      : window.location.origin; // On Vercel, the backend is usually at the same domain or handled by proxy
+    
     window.location.href = `${backendUrl}/api/v1/users/auth/google`;
   };
 
