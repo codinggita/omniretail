@@ -34,6 +34,13 @@ const userSchema = new mongoose.Schema(
         return this.role === 'retailer';
       },
     },
+    apiKey: {
+      type: String,
+      select: false,
+    },
+    apiKeyCreatedAt: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

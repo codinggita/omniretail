@@ -54,6 +54,18 @@ export const getProfile = async () => {
 };
 
 
+/**
+ * generateApiKey
+ *
+ * Requests a brand new API key for a retailer.
+ *
+ * @returns {Promise<Object>} Contains the raw { apiKey }
+ */
+export const generateApiKey = async () => {
+  return apiClient.post('/users/api-key', {});
+};
+
+
 // Bundle all the functions together so you can also do:
 //   import authApi from './authApi';
 //   authApi.login(...)
@@ -61,6 +73,7 @@ const authApi = {
   login,
   register,
   getProfile,
+  generateApiKey,
 };
 
 export default authApi;
