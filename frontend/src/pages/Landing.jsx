@@ -1,11 +1,17 @@
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import SEO from '../components/common/SEO';
 
 const Landing = () => {
   const { user } = useSelector((state) => state.auth);
 
   return (
     <div className="min-h-screen bg-[#131315] text-[#e5e1e4] font-inter selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+      <SEO 
+        title="Modern Hybrid Retail Solutions"
+        description="Transform your retail business with OmniRetail's hybrid platform. Real-time inventory sync, AI negotiation, and seamless local store integration."
+        keywords="retail, e-commerce, ai negotiation, store locator, inventory management, omniretail"
+      />
       
       {/* ── Navbar ── */}
       <nav className="fixed top-0 inset-x-0 z-[100] bg-[#131315]/80 backdrop-blur-xl border-b border-white/5">

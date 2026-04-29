@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../../store/slices/authSlice';
 import authApi from '../../api/authApi';
+import SEO from '../../components/common/SEO';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -58,6 +59,10 @@ const Login = () => {
 
   return (
     <div className="h-screen w-screen flex overflow-hidden bg-[#131315] text-[#e5e1e4] font-inter antialiased">
+      <SEO 
+        title="Sign In" 
+        description="Access your OmniRetail account to manage your hybrid store or start shopping locally."
+      />
 
       {/* ── Left Brand Panel ── */}
       <div className="hidden lg:flex w-1/2 relative flex-col justify-between p-12 overflow-hidden">

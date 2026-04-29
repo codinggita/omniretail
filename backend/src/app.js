@@ -10,16 +10,17 @@ const orderRoutes = require('./routes/order.routes.js');
 const customerRoutes = require('./routes/customer.routes.js');
 const storeRoutes = require('./routes/store.routes.js');
 const passport = require('passport');
+const helmet = require('helmet');
 
 // ─── Passport Config ────────────────────────────────────────────────────────
 require('./config/passport')(passport);
 
 const app = express();
 
-// ─── Passport Middleware
+// ─── Middleware ───────────────────────────────────────────────────────────────
+app.use(helmet()); // Security Headers
 app.use(passport.initialize());
 
-// ─── Middleware ───────────────────────────────────────────────────────────────
 const allowedOrigins = [
   'https://omniretail-two.vercel.app',
   'http://localhost:5173',
