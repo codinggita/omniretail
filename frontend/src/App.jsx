@@ -15,6 +15,7 @@ import Customers from './pages/Customers';
 import StoreLocator from './pages/StoreLocator';
 import Settings from './pages/Settings';
 import Support from './pages/Support';
+import Landing from './pages/Landing';
 import './index.css';
 
 // Dashboard Layout Wrapper
@@ -35,13 +36,16 @@ function App() {
   return (
     <Router>
       <Routes>
+        {/* Landing Page */}
+        <Route path="/" element={<Landing />} />
+
         {/* Auth Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         
         {/* Protected Dashboard Route */}
         <Route 
-          path="/" 
+          path="/dashboard" 
           element={
             <ProtectedRoute>
               <DashboardLayout>

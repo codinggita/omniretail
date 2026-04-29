@@ -21,7 +21,7 @@ const Sidebar = () => {
         { name: 'Profile', path: '/settings', icon: 'person' },
       ]
     : [
-        { name: 'Dashboard', path: '/', icon: 'dashboard' },
+        { name: 'Dashboard', path: '/dashboard', icon: 'dashboard' },
         { name: 'Inventory', path: '/inventory', icon: 'inventory_2' },
         { name: 'Orders', path: '/orders', icon: 'shopping_cart' },
         { name: 'Customers', path: '/customers', icon: 'group' },
@@ -32,15 +32,15 @@ const Sidebar = () => {
   return (
     <nav className="hidden md:flex flex-col fixed left-0 top-0 h-full w-64 border-r border-zinc-800 bg-zinc-950 py-6 z-50">
       {/* Brand */}
-      <div className="px-6 mb-8 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-lg bg-primary-container/20 flex items-center justify-center border border-primary-container/30">
+      <Link to={user ? "/dashboard" : "/"} className="px-6 mb-8 flex items-center gap-3 outline-none group">
+        <div className="w-8 h-8 rounded-lg bg-primary-container/20 flex items-center justify-center border border-primary-container/30 group-hover:scale-110 transition-transform">
           <span className="material-symbols-outlined text-primary-container" style={{ fontSize: '20px' }}>storefront</span>
         </div>
         <div>
           <h1 className="font-manrope text-lg font-extrabold tracking-tighter text-white leading-none">OmniRetail</h1>
           <p className="font-inter text-[11px] font-semibold uppercase tracking-wider text-on-surface-variant mt-0.5">Management Portal</p>
         </div>
-      </div>
+      </Link>
 
       {/* Main Nav */}
       <div className="flex-1 flex flex-col gap-1 font-inter text-sm font-medium">
