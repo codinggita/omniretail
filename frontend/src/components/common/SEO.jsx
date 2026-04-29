@@ -4,9 +4,11 @@ const SEO = ({ title, description, keywords, image, url }) => {
   const siteTitle = 'OmniRetail - High-Fidelity Hybrid Retail Platform';
   const siteDescription = 'OmniRetail empowers retailers with real-time stock visibility, AI price negotiations, and seamless hybrid retail integration.';
   const siteUrl = 'https://omniretail-two.vercel.app';
+  const siteLogo = '/favicon.jpg';
   
   const displayTitle = title ? `${title} | OmniRetail` : siteTitle;
   const displayDescription = description || siteDescription;
+  const displayImage = image || siteLogo;
 
   return (
     <Helmet>
@@ -20,14 +22,14 @@ const SEO = ({ title, description, keywords, image, url }) => {
       <meta property="og:url" content={url || siteUrl} />
       <meta property="og:title" content={displayTitle} />
       <meta property="og:description" content={displayDescription} />
-      {image && <meta property="og:image" content={image} />}
+      <meta property="og:image" content={displayImage} />
 
       {/* Twitter */}
       <meta property="twitter:card" content="summary_large_image" />
       <meta property="twitter:url" content={url || siteUrl} />
       <meta property="twitter:title" content={displayTitle} />
       <meta property="twitter:description" content={displayDescription} />
-      {image && <meta property="twitter:image" content={image} />}
+      <meta property="twitter:image" content={displayImage} />
       
       {/* Canonical Link */}
       <link rel="canonical" href={url || siteUrl} />
