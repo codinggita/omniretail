@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { getProducts, createProduct, updateProduct, deleteProduct } from '../api/productsApi';
+import { getProducts, createProduct, updateProduct, deleteProduct, bulkImportProducts } from '../api/productsApi';
 import { createNegotiation } from '../api/negotiationsApi';
 
 const statusConfig = {
@@ -151,6 +151,22 @@ const Inventory = () => {
     }
   };
 
+  const handleImport = async () => {
+    try {
+      setLoading(true);
+      await bulkImportProducts([
+        { sku: 'AIR-MAX-90', name: 'Nike Air Max 90', basePrice: 8999, category: 'Footwear', stockQuantity: 45 },
+        { sku: 'SN-WF-1000', name: 'Sony WF-1000XM4', basePrice: 19990, category: 'Audio', stockQuantity: 12 },
+        { sku: 'IPH-15-PRO', name: 'iPhone 15 Pro', basePrice: 134900, category: 'Phones', stockQuantity: 8 }
+      ]);
+      fetchProducts();
+    } catch (e) {
+      alert('Import failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filtered = products.filter((p) => {
     const matchCategory = activeCategory === 'All' || p.category === activeCategory;
     const matchSearch =
@@ -183,7 +199,10 @@ const Inventory = () => {
         </div>
         {!isCustomer && (
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container border border-outline-variant text-on-surface-variant hover:text-on-surface hover:border-zinc-600 transition-all font-inter text-sm font-semibold outline-none">
+            <button 
+              onClick={handleImport}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container border border-outline-variant text-on-surface-variant hover:text-on-surface hover:border-zinc-600 transition-all font-inter text-sm font-semibold outline-none"
+            >
               <span className="material-symbols-outlined text-[18px]">upload</span>
               Import
             </button>
@@ -412,9 +431,19 @@ const Inventory = () => {
 
           {filtered.length === 0 && (
             <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
-              <span className="material-symbols-outlined text-zinc-700 text-[64px]">inventory_2</span>
-              <p className="font-manrope text-xl font-bold text-on-surface-variant mt-4">No products found</p>
-              <p className="font-inter text-sm text-outline mt-1">Try adjusting your search or filter criteria.</p>
+              <div className="w-16 h-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-zinc-700 text-3xl">inventory_2</span>
+              </div>
+              <p className="font-manrope text-xl font-bold text-on-surface-variant">No products found</p>
+              <p className="font-inter text-sm text-outline mt-1 mb-6">Your catalog is empty or no matches found.</p>
+              {!isCustomer && (
+                <button 
+                  onClick={handleImport}
+                  className="px-8 py-3 bg-primary-container text-on-primary-container rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-primary-container/20 hover:scale-105 transition-transform"
+                >
+                  Seed Sample Inventory
+                </button>
+              )}
             </div>
           )}
         </div>

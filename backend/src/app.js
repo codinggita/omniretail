@@ -9,8 +9,15 @@ const productRoutes = require('./routes/product.routes.js');
 const orderRoutes = require('./routes/order.routes.js');
 const customerRoutes = require('./routes/customer.routes.js');
 const storeRoutes = require('./routes/store.routes.js');
+const passport = require('passport');
+
+// ─── Passport Config ────────────────────────────────────────────────────────
+require('./config/passport')(passport);
 
 const app = express();
+
+// ─── Passport Middleware
+app.use(passport.initialize());
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 const allowedOrigins = [

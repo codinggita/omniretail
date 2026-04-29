@@ -163,30 +163,41 @@ const StoreLocator = () => {
                 <span className="text-[10px] font-bold text-emerald-400 tracking-wider uppercase">High Availability</span>
               </div>
 
-              <div className="grid grid-cols-3 gap-2">
-                <div className="bg-zinc-950/50 p-2 rounded-xl border border-zinc-800/50 flex flex-col items-center justify-center">
-                  <span className="material-symbols-outlined text-zinc-500 text-[16px] mb-1">inventory_2</span>
-                  <span className="text-xs font-bold text-zinc-300">850</span>
-                </div>
+              <div className="grid grid-cols-2 gap-2">
                 <div className="bg-zinc-950/50 p-2 rounded-xl border border-zinc-800/50 flex flex-col items-center justify-center">
                   <span className="material-symbols-outlined text-zinc-500 text-[16px] mb-1">schedule</span>
-                  <span className="text-[10px] font-bold text-zinc-300">OPEN</span>
+                  <span className="text-[10px] font-bold text-zinc-300 uppercase truncate w-full text-center">{store.openingHours || '9AM - 10PM'}</span>
                 </div>
-                <div className="bg-zinc-950/50 p-2 rounded-xl border border-zinc-800/50 flex flex-col items-center justify-center">
-                  <span className="material-symbols-outlined text-zinc-500 text-[16px] mb-1">local_shipping</span>
-                  <span className="text-[10px] font-bold text-zinc-300 uppercase">Today</span>
+                <div className={`bg-zinc-950/50 p-2 rounded-xl border border-zinc-800/50 flex flex-col items-center justify-center ${store.isMainBranch ? 'border-primary-container/30 bg-primary-container/5' : ''}`}>
+                  <span className={`material-symbols-outlined text-[16px] mb-1 ${store.isMainBranch ? 'text-primary-container' : 'text-zinc-500'}`}>
+                    {store.isMainBranch ? 'verified' : 'store'}
+                  </span>
+                  <span className={`text-[10px] font-bold uppercase ${store.isMainBranch ? 'text-primary-container' : 'text-zinc-300'}`}>
+                    {store.isMainBranch ? 'HQ' : 'Branch'}
+                  </span>
                 </div>
               </div>
             </div>
           ))}
           
           {filteredStores.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-12 text-center px-6">
+            <div className="flex flex-col items-center justify-center py-12 text-center px-6 h-full">
               <div className="w-16 h-16 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center mb-4">
                 <span className="material-symbols-outlined text-zinc-600 text-3xl">location_off</span>
               </div>
               <h3 className="text-zinc-300 font-bold mb-2">No stores found</h3>
-              <p className="text-xs text-zinc-500">Try searching for a different location or adjusting your filters.</p>
+              <p className="text-xs text-zinc-500 mb-6">Initialize your store network to see locations near you.</p>
+              <button 
+                onClick={async () => {
+                  try {
+                    await import('../api/storesApi').then(api => api.seedStores());
+                    window.location.reload();
+                  } catch (e) { alert('Seed failed'); }
+                }}
+                className="px-6 py-2.5 bg-primary-container text-on-primary-container rounded-xl font-bold text-xs uppercase tracking-widest shadow-lg shadow-primary-container/20 hover:scale-105 transition-transform"
+              >
+                Seed Sample Stores
+              </button>
             </div>
           )}
         </div>
