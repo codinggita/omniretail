@@ -12,6 +12,10 @@
 OmniRetail is a cutting-edge **Phygital (Physical + Digital)** commerce platform designed to bridge the gap between offline inventory uncertainty and online pricing rigidity. By unifying real-time physical store inventory visibility with an AI-powered price negotiation engine, OmniRetail empowers both consumers and retailers.
 
 ---
+UI/UX link : https://www.figma.com/proto/wKJxGXyaNh73Bxtp85UrNf/Untitled?page-id=19%3A3&node-id=50-1080&p=f&viewport=-2486%2C565%2C0.78&t=dacZZSEY3vB82TKX-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=50%3A652  <br>
+deployment link : https://omniretail-two.vercel.app/   <br>
+documentation link : https://documenter.getpostman.com/view/50841251/2sBXqJLLqV
+---
 
 ## 🚀 Key Value Propositions
 
@@ -132,4 +136,4 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ---
 
-*Built with ❤️ by the OmniRetail Team*
+
